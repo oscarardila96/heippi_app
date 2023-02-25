@@ -14,7 +14,7 @@ routerApi(app);
 
 initModels();
 
-db.sync({ force: true })
+db.sync({ force: false })
   .then(() => console.log("OK"))
   .catch(error => console.log(error))
 
