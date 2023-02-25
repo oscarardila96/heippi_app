@@ -12,10 +12,6 @@ const Services = db.define("services", {
   service: {
     type: DataTypes.STRING,
     allowNull: false
-  },
-  hospital_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false
   }
 });
 

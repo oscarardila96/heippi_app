@@ -1,5 +1,6 @@
 const { DataTypes } = require("sequelize");
 const db = require("../utils/database");
+const bcrypt = require("bcryptjs");
 
 const Hospitals = db.define("hospitals", {
   id: {
@@ -37,6 +38,14 @@ const Hospitals = db.define("hospitals", {
   address: {
     type: DataTypes.STRING,
     allowNull: false
+  }
+}, {
+  hooks: {
+    beforeCreate: (user, options) => {
+      const { password } = user;
+      const hash = bcrypt.hashSync(password, 10);
+      user.password = hash
+    }
   }
 });
 
