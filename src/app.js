@@ -6,16 +6,15 @@ const routerApi = require("./routes");
 const db = require("./utils/database");
 
 const app = express();
-
 app.use(cors());
 app.use(express.json());
-app.use(error);
 routerApi(app);
-
 initModels();
+app.use(error);
+
 
 db.sync({ force: false })
-  .then(() => console.log("OK"))
+  .then(() => console.log("Database synchronized"))
   .catch(error => console.log(error))
 
 module.exports = app;
