@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const db = require("../utils/database");
 
-const HospitalServices = db.define("hospital_services", {
+const HospitalSpecialties = db.define("hospital_specialties", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -13,10 +13,10 @@ const HospitalServices = db.define("hospital_services", {
     type: DataTypes.INTEGER,
     allowNull: false
   },
-  service_id: {
+  specialty_id: {
     type: DataTypes.INTEGER,
     allowNull: false
   }
 });
 
-module.exports = HospitalServices;
+module.exports = HospitalSpecialties;

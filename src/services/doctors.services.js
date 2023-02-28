@@ -2,7 +2,7 @@ const Doctors = require("../models/doctors.models");
 const Hospitals = require("../models/hospitals.models");
 const Observations = require("../models/observations.models");
 const Patients = require("../models/patients.models");
-const Services = require("../models/services.models");
+const Specialties = require("../models/specialties.models");
 
 class DoctorsServices {
   static async getDoctorsObs(id) {
@@ -10,7 +10,7 @@ class DoctorsServices {
       const result = await Doctors.findOne(
         {
           where: { id },
-          attributes: ["name", "id_number", "address", "phone", "email"],
+          attributes: ["name", "address"],
           include:
           {
             model: Observations,
@@ -20,15 +20,15 @@ class DoctorsServices {
               {
                 model: Patients,
                 as: "patient",
-                attributes: ["name", "email", "id_number", "birthdate"]
+                attributes: ["name", "date_of_birth"]
               }, {
-                model: Services,
-                as: "service",
-                attributes: ["id", "service"]
+                model: Specialties,
+                as: "specialty",
+                attributes: ["specialty"]
               }, {
                 model: Hospitals,
                 as: "hospital",
-                attributes: ["name", "id_number", "address", "phone", "email"]
+                attributes: ["name", "address"]
               }]
           }
         });

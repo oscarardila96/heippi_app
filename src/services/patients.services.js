@@ -1,16 +1,27 @@
 const Patients = require("../models/patients.models");
 const Hospitals = require("../models/hospitals.models");
 const Doctors = require("../models/doctors.models");
-const Services = require("../models/services.models");
+const Specialties = require("../models/specialties.models");
 const Observations = require("../models/observations.models");
 
 class PatientsServices {
+  static async registerPatient(newPatient) {
+    try {
+      const patient = newPatient;
+      const token = await AuthServices.genToken(newPatient);
+      patient.token = token;
+      const result = await Patients.create(patient);
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  }
   static async getPatientObs(id) {
     try {
       const result = await Patients.findOne(
         {
           where: { id },
-          attributes: ["name", "email", "id_number", "birthdate"],
+          attributes: ["name", "date_of_birth"],
           include: {
             model: Observations,
             as: "observation",
@@ -19,15 +30,15 @@ class PatientsServices {
               {
                 model: Hospitals,
                 as: "hospital",
-                attributes: ["name", "id_number", "address", "phone", "email"],
+                attributes: ["name", "address"],
               }, {
                 model: Doctors,
                 as: "doctor",
-                attributes: ["name", "id_number", "address", "phone", "email"]
+                attributes: ["name", "address"]
               }, {
-                model: Services,
-                as: "service",
-                attributes: ["id", "service"]
+                model: Specialties,
+                as: "specialty",
+                attributes: ["id", "specialty"]
               }]
           }
         });

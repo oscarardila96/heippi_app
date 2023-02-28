@@ -19,4 +19,4 @@ const HospitalDoctors = db.define("hospital_doctors", {
   }
 });
 
-module.exports = HospitalDoctors;
+module.exports = HospitalDoctors
