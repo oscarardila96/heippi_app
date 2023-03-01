@@ -11,6 +11,8 @@ const Specialties = db.define("specialties", {
     type: DataTypes.STRING,
     allowNull: false
   }
+}, {
+  timestamps: false
 });
 
 module.exports = Specialties;
