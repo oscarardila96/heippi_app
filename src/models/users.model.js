@@ -1,15 +1,14 @@
 const { DataTypes } = require("sequelize");
 const db = require("../utils/database");
+const bcrypt = require("bcryptjs");
 
-const Pacients = db.define("pacients", {
+const Users = db.define("users", {
   id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
-    unique: true,
-    allowNull: false
   },
-  id_number: {
+  identification: {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true
@@ -30,14 +29,25 @@ const Pacients = db.define("pacients", {
     type: DataTypes.STRING,
     allowNull: false
   },
-  name: {
-    type: DataTypes.STRING,
+  role: {
+    type: DataTypes.ENUM("paciente", "hospital", "doctor"),
     allowNull: false
   },
-  birthdate: {
-    type: DataTypes.DATEONLY,
-    allowNull: false
+  confirmed: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
+  token: {
+    type: DataTypes.STRING(450)
+  }
+}, {
+  hooks: {
+    beforeCreate: (user, options) => {
+      const { password } = user;
+      const hash = bcrypt.hashSync(password, 10);
+      user.password = hash
+    }
   }
 });
 
-module.exports = Pacients;
+module.exports = Users;
