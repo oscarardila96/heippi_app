@@ -4,6 +4,7 @@ const Hospitals = require("../models/hospitals.models");
 const HospitalSpecialties = require("../models/hospital_specialties.models");
 const Doctors = require("../models/doctors.models");
 const Users = require("../models/users.model");
+const UsersServices = require("./users.services");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
@@ -75,7 +76,6 @@ class AuthServices {
   static async confirmation(id, token) {
     try {
       const result = await Users.findOne({ where: { id } });
-      console.log(result);
       if (result) {
         const isValid = result.token === token;
         return isValid;
@@ -108,9 +108,7 @@ class AuthServices {
         const isValid = bcrypt.compareSync(currentPassword, user.password);
         if (isValid) {
           const hash = bcrypt.hashSync(newPassword, 10);
-          const passChange = await Users.update(
-            { password: hash },
-            { where: { email } });
+          const passChange = await UsersServices.updateByEmail(email, { password: hash });
           return passChange;
         }
         return isValid;
@@ -120,5 +118,4 @@ class AuthServices {
     }
   }
 }
-
 module.exports = AuthServices;

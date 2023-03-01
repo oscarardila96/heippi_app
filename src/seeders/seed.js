@@ -9,7 +9,7 @@ const HospitalDoctors = require("../models/hospital_doctors.models");
 const Observations = require("../models/observations.models");
 
 const users = [
-  { identification: "PA12345678", email: "larkidelmi@gufum.com", phone: "+573014728596", password: "root123", role: "paciente" },
+  { identification: "PA12345678", email: "oscarardila96@gmail.com", phone: "+573014728596", password: "root123", role: "paciente", confirmed: true },
   { identification: "PA12345673", email: "uyscdlm12i@gvfum.com", phone: "+573014728592", password: "root123", role: "paciente" },
   { identification: "PA12345671", email: "qwehr54i@gufubm.com", phone: "+573014728595", password: "root123", role: "paciente" },
   { identification: "HA123456781", email: "bmib_wldzn13@pihey.com", phone: "+5730147285961", password: "root123", role: "hospital" },
@@ -42,7 +42,7 @@ const specialties = [
   { specialty: "ginecologia" },
   { specialty: "psicologia" },
   { specialty: "pediatria" },
-  { specialty: "cirgia" },
+  { specialty: "cirugia" },
   { specialty: "cardiologia" },
   { specialty: "otorrinolaringología" },
   { specialty: "urologia" },
@@ -106,20 +106,3 @@ db.sync({ force: true })
   })
   .catch(error => console.log(error))
   .finally(() => console.log("Seeding finalizado"));
-
-  //createObs
-
-//PassChange
-//{ "email": "hospital1@gmail.com", "newPassword": "hola123", "currentPassword": "root123" }
-
-//hospitales
-//{ "identification": "BA123456781", "email": "bmib_wldzn13@pihey.com", "phone": "+5730147285961", "password": "root123", "name": "hospital", "address": "123 calle falsa", "role": "hospital", "specialties": [{ "specialty": "pediatria" }, { "specialty": "psicologia" }, { "specialty": "cardiologia" }] }
-//{ "identification": "RA123456782", "email": "hospital1@gmail.com", "phone": "+5730147285962", "password": "root123", "name": "hospital1", "address": "123 calle falsa", "role": "hospital", "specialties": [{ "specialty": "ginecologia" }, { "specialty": "cirugia" }, { "specialty": "odontologia" }] }
-
-//pacientes
-//{ "identification": "BA12345678", "email": "larkidelmi@gufum.com", "phone": "+573014728596", "password": "root123", "role": "paciente", "name": "Paciente", "address": "123 calle falsa", "date_of_birth": "2000-02-11" }
-//{ "identification": "BA1234567811", "email": "paciente1@gmail.com", "phone": "+5730147285961", "password": "root123", "role": "paciente", "name": "Paciente1", "address": "123 calle falsa", "date_of_birth": "2000-02-11" }
-
-//medicos
-//{ "identification": "BA1234567827", "email": "mkakames459@vootin.com", "phone": "+5730147285962", "password": "root123", "name": "medico", "address": "123 calle falsa", "role": "doctor", "hospitalId": "BA123456781" }
-//{ "identification": "BA1234567828", "email": "medico1@gmail.com", "phone": "+5730147285962", "password": "root123", "name": "medico1", "address": "123 calle falsa", "role": "doctor", "hospitalId": "RA123456782" }
