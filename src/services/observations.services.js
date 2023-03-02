@@ -5,6 +5,8 @@ const Patients = require("../models/patients.models");
 const Specialties = require("../models/specialties.models");
 const Users = require("../models/users.model");
 
+// Los tres servicios realizan el mismo proceso desde diferente perspectiva. Cada uno empieza desde una tabla o usuario diferente y desde ahí se partepara buscar el resto de la información y devolverla al controlador.
+
 class ObservationsServices {
   static async createObservation(newObservation) {
     try {

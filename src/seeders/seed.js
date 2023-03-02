@@ -1,15 +1,17 @@
 const db = require("../utils/database");
 const Users = require("../models/users.model");
-const Hospitals = require("../models/hospitals.models");
-const Doctors = require("../models/doctors.models");
-const Specialties = require("../models/specialties.models");
-const HospitalSpecialties = require("../models/hospital_specialties.models");
-const Patients = require("../models/patients.models");
-const HospitalDoctors = require("../models/hospital_doctors.models");
-const Observations = require("../models/observations.models");
+// const Hospitals = require("../models/hospitals.models");
+// const Doctors = require("../models/doctors.models");
+// const Specialties = require("../models/specialties.models");
+// const HospitalSpecialties = require("../models/hospital_specialties.models");
+// const Patients = require("../models/patients.models");
+// const HospitalDoctors = require("../models/hospital_doctors.models");
+// const Observations = require("../models/observations.models");
+
+//Se creo el seed para fines de desarrollo y pruebas de endpoints y funcionamiento correcto de la aplicación.
 
 const users = [
-  { identification: "PA12345678", email: "oscarardila96@gmail.com", phone: "+573014728596", password: "root123", role: "paciente", confirmed: true },
+  { identification: "PA12345678", email: "oardila001@gmail.com", phone: "+573014728596", password: "root123", role: "paciente", confirmed: true },
   { identification: "PA12345673", email: "uyscdlm12i@gvfum.com", phone: "+573014728592", password: "root123", role: "paciente" },
   { identification: "PA12345671", email: "qwehr54i@gufubm.com", phone: "+573014728595", password: "root123", role: "paciente" },
   { identification: "HA123456781", email: "bmib_wldzn13@pihey.com", phone: "+5730147285961", password: "root123", role: "hospital" },
@@ -25,6 +27,8 @@ const doctors = [
   { user_id: 8, name: "Dra Andrea", address: "123 calle falsa", hospital_id: 2 },
   { user_id: 9, name: "Dra Juliana", address: "123 calle falsa", hospital_id: 3 }
 ];
+
+const newdoc = { identification: "DA34567825", email: "ascdia@aol.com", phone: "+573014728591", password: "root123", role: "doctor", name: "Dr Jose Gregorio", address: "012 calle falsa", hospitalId: "HA123456782" }
 
 const patients = [
   { name: "Andres", address: "123 calle falsa", date_of_birth: "1984-03-20", user_id: 1, },
@@ -80,29 +84,29 @@ const observations = [
 
 db.sync({ force: true })
   .then(() => {
-    users.forEach(user => Users
-      .create(user));
-    setTimeout(() => {
-      patients.forEach(patient => Patients.create(patient));
-    }, 100);
-    setTimeout(() => {
-      hospitals.forEach(hospital => Hospitals.create(hospital));
-    }, 200);
-    setTimeout(() => {
-      doctors.forEach(doctor => Doctors.create(doctor));
-    }, 300);
-    setTimeout(() => {
-      specialties.forEach(specialty => Specialties.create(specialty));
-    }, 400);
-    setTimeout(() => {
-      observations.forEach(observation => Observations.create(observation));
-    }, 500);
-    setTimeout(() => {
-      hospitalSpecialties.forEach(hs => HospitalSpecialties.create(hs));
-    }, 600);
-    setTimeout(() => {
-      hospitalDoctors.forEach(hd => HospitalDoctors.create(hd));
-    }, 600);
+    users.forEach(user => Users.create(user));
+    // setTimeout(() => {
+    //   patients.forEach(patient => Patients.create(patient));
+    // }, 100);
+    // setTimeout(() => {
+    //   hospitals.forEach(hospital => Hospitals.create(hospital));
+    // }, 200);
+    // setTimeout(() => {
+    //   doctors.forEach(doctor => Doctors.create(doctor));
+    // }, 300);
+    // setTimeout(() => {
+    //   specialties.forEach(specialty => Specialties.create(specialty));
+    // }, 400);
+    // setTimeout(() => {
+    //   observations.forEach(observation => Observations.create(observation));
+    // }, 500);
+    // setTimeout(() => {
+    //   hospitalSpecialties.forEach(hs => HospitalSpecialties.create(hs));
+    // }, 600);
+    // setTimeout(() => {
+    //   hospitalDoctors.forEach(hd => HospitalDoctors.create(hd));
+    // }, 600);
   })
   .catch(error => console.log(error))
-  .finally(() => console.log("Seeding finalizado"));
+
+  //513b8736-a257-4e2d-80c2-53c38277dcaf

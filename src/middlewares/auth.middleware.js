@@ -1,6 +1,8 @@
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
+// Se protegen las rutas con el middleware de autenticación que se encarga de validar si el token que provee el usuario en los headers es válido. 
+
 const authMiddleware = (req, res, next) => {
   let { authorization: token } = req.headers;
   token = token.replace("Bearer ", "");

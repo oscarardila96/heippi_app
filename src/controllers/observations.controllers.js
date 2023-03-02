@@ -1,6 +1,7 @@
 const PDFDocument = require("pdfkit");
-const fs = require("fs");
 const ObservationsServices = require("../services/observations.services");
+
+// Todos los controladores trabajan practicamente de la misma manera. Reciban la información y la envían al servicios respectivo. El último controlador responde con un PDF de la información solicitada.
 
 const createObservation = async (req, res, next) => {
   try {
