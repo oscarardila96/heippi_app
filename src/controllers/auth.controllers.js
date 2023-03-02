@@ -1,34 +1,65 @@
 const AuthServices = require("../services/auth.services");
 const UsersServices = require("../services/users.services");
 const transporter = require("../utils/mailer");
+const generator = require("generate-password");
+
+
+// El controlador recibe la información y la envía al servicios mientras espera la respuesta para enviar un correo electrónico de confirmación de la cuenta
 
 const register = async (req, res, next) => {
   try {
-    const { identification, email, phone, password, role, name, address } = req.body;
-    if (identification && email && phone && password && role && name && address) {
-      const newUser = req.body;
-      const result = await AuthServices.register(newUser);
-      if (result) {
-        const { id, name, email, identification, role, createdAt, token } = result;
-        const info = { id, name, email, identification, role, createdAt }
-        res.status(201).json({ message: "Usuario creado exitosamente", info });
-        const url = `${process.env.PUBLIC_URL}/api/v1/auth/confirmation/${id}/${token}`;
-        await transporter.sendMail({
-          from: process.env.O_EMAIL,
-          to: result.email,
-          subject: "Confirmar Email || Heippi Api",
-          html: `<h1>Confirma tu email</h1> <p></p><p>Solo haz click en el siguiente <a href=${url}>${url}</a>`
-        });
-      } else {
-        next({ message: "Error creando usuario" });
-      }
-    } else {
-      next({ message: "Información faltante" });
+    const newUser = req.body;
+    const result = await AuthServices.register(newUser);
+    if (result) {
+      const { id, name, token, email } = result;
+      const url = `${process.env.PUBLIC_URL}/api/v1/auth/confirmation/${id}/${token}`;
+      await transporter.sendMail({
+        from: process.env.O_EMAIL,
+        to: email,
+        subject: "Confirmar Email || Heippi Api",
+        html: `<h1>Confirma tu email</h1> <p>Hola ${name},</p><p>Solo haz click en el siguiente enlace <a href=${url}>${url}</a>`
+      });
+      res.status(201).json({ message: `Usuario registrado exitosamente, se envió un correo electrónico a ${email} para confirmación de la cuenta` });
     }
+    next({ message: "Error creando usuario" });
   } catch (error) {
     next(error)
   }
 };
+
+//Dado que el doctor es registrado a partir de un hospital, el controlador genera una clave aleatoria, envia información al servicio y espera a la respuesta para enviar un correo electrónico con los datos obtenidos y que el usuario pueda cambiar por primera vez la contraseña aleatoria
+
+const registerDoctor = async (req, res, next) => {
+  try {
+    const newDoctor = req.body;
+    const password = generator.generate({
+      length: 10,
+      numbers: true,
+      symbols: true,
+      strict: true
+    });
+    newDoctor.password = password;
+    const result = await AuthServices.registerDoctor(newDoctor);
+    if (result) {
+      const { id, name, email } = result;
+      const doctor = { id, name, email, password }
+      const url = `${process.env.PUBLIC_URL}/api/v1/auth/password-reset/`;
+      await transporter.sendMail({
+        from: process.env.O_EMAIL,
+        to: email,
+        subject: "Establecer nueva contraseña || Heippi Api",
+        html: `<h1>Establece una nueva contraseña</h1> <p>Hola ${name},</p><p>Solo haz click en el siguiente enlace <a href=${url}>${url}</a> y utiliza tu correo electronico ${email} y la contraseña temporal ${password} para crear una nueva contraseña.`
+      });
+      res.status(201).json({ message: "Doctor registrado existosamente", doctor });
+    } else {
+      next({ message: "Error en el registro de doctor" })
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+// El controlador envia la información recibida a un servicio y si este comprueba que la credenciales son correctas, envia la información del usuario para generar y devolver un token y que el usuario pueda acceder a las rutas protegidas
 
 const login = async (req, res, next) => {
   try {
@@ -53,6 +84,8 @@ const login = async (req, res, next) => {
   }
 };
 
+// El controlador envia el token y id que el usuario recibió en su email al servicio para verificar que sean correctos. De ser así, actualiza el estado del usuario a confirmado permitiendole logearse de ahí en adelante.
+
 const confirmation = async (req, res, next) => {
   try {
     const { id, token } = req.params;
@@ -68,6 +101,8 @@ const confirmation = async (req, res, next) => {
   }
 };
 
+// Controlador para cuando el usuario sabe su contraseña pero igual quiere cambiarla. Envia la información al servicio para comprobar que su contraseña actual es correcta y de ser así, la reemplaza por la nueva.
+
 const passwordReset = async (req, res, next) => {
   try {
     const credentials = req.body;
@@ -82,24 +117,26 @@ const passwordReset = async (req, res, next) => {
   }
 };
 
+//En el caso de no recordar la contraseña, el usuario recibe un correo con un enlace para recuperar la cuenta, parecido al proceso de confirmación de la cuenta
+
 const passwordRecovery = async (req, res, next) => {
   try {
     const { email } = req.body;
     const user = await UsersServices.getByEmail(email);
     if (user) {
-      const { id, email } = user;
+      const { id, email, name } = user;
       const userData = { id, email };
       const token = await AuthServices.genToken(userData)
-      const newProps = { token: token, confirmed: false };
+      const newProps = { token, confirmed: false };
       await UsersServices.updateByEmail(email, newProps);
-      const url = `${process.env.PUBLIC_URL}/api/v1/auth/recovered-password/${id}/${token}`;
-      res.json({ message: "Se envió correo electrónico para recuperación de contraseña" })
+      const url = `${process.env.PUBLIC_URL}/api/v1/auth/recover-password/${id}/${token}`;
       await transporter.sendMail({
         from: process.env.O_EMAIL,
         to: user.email,
-        subject: "Recuperar contraseña|| Heippi Api",
-        html: `<h1>Recupera tu email</h1> <p></p><p>Solo haz click en el siguiente <a href=${url}>${url}</a>`
+        subject: "Recuperar contraseña || Heippi Api",
+        html: `<h1>Recupera tu email</h1> <p>Hola ${name},</p><p>Solo haz click en el siguiente enlace <a href=${url}>${url}</a>`
       });
+      res.json({ message: `Se envió correo electrónico a ${email} para recuperación de contraseña` })
     } else {
       next({ message: "Usuario no encontrado" });
     }
@@ -108,6 +145,7 @@ const passwordRecovery = async (req, res, next) => {
   }
 };
 
+// El controlador recibe la información después de que el usuario haya abierto el enlace que llegó en su correo para poder crear una nueva contraseña
 const recoveredPassword = async (req, res, next) => {
   try {
     const { id, token } = req.params;
@@ -117,11 +155,27 @@ const recoveredPassword = async (req, res, next) => {
       await UsersServices.updateById(id, { confirmed: true, token: null, password: newPassword });
       res.json({ message: "Usuario actualizó su contraseña exitosamente" })
     } else {
-      next({ message: "Error en la actualización de la cuenta" });
+      next({ message: "Error en la actualización de la contraseña" });
     }
   } catch (error) {
     next(error)
   }
-}
+};
 
-module.exports = { register, login, confirmation, passwordReset, passwordRecovery, recoveredPassword };
+// El controlador recibe el email, la contraseña aleatoria y la nueva. Si esta información es correcta, el servicio reemplaza la contraseña aleatoria por la nueva.
+
+const firstLoginReset = async (req, res, next) => {
+  try {
+    const credentials = req.body;
+    const result = await AuthServices.resetPass(credentials);
+    if (result) {
+      res.json({ message: "Contraseña actualizada exitosamente" })
+    } else {
+      next({ message: "Error en la actualización de contraseña" });
+    }
+  } catch (error) {
+    next(error)
+  }
+};
+
+module.exports = { register, login, confirmation, passwordReset, passwordRecovery, recoveredPassword, registerDoctor, firstLoginReset };

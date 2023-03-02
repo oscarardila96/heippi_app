@@ -3,12 +3,14 @@ const db = require("../utils/database");
 
 const Doctors = db.define("doctors", {
   id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
     primaryKey: true,
-    autoIncrement: true,
+    allowNull: false
   },
   user_id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
     allowNull: false
   },
   name: {
@@ -20,7 +22,8 @@ const Doctors = db.define("doctors", {
     allowNull: false
   },
   hospital_id: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
     allowNull: false
   }
 });
