@@ -9,15 +9,16 @@ const generator = require("generate-password");
 const register = async (req, res, next) => {
   try {
     const newUser = req.body;
+    const { uname } = req.body;
     const result = await AuthServices.register(newUser);
     if (result) {
-      const { id, name, token, email } = result;
+      const { id, token, email } = result;
       const url = `${process.env.PUBLIC_URL}/api/v1/auth/confirmation/${id}/${token}`;
       await transporter.sendMail({
         from: process.env.O_EMAIL,
         to: email,
         subject: "Confirmar Email || Heippi Api",
-        html: `<h1>Confirma tu email</h1> <p>Hola ${name},</p><p>Solo haz click en el siguiente enlace <a href=${url}>${url}</a>`
+        html: `<h1>Confirma tu email</h1> <p>Hola ${uname},</p><p>Solo haz click en el siguiente enlace <a href=${url}>${url}</a>`
       });
       res.status(201).json({ message: `Usuario registrado exitosamente, se envió un correo electrónico a ${email} para confirmación de la cuenta` });
     }
