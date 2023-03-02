@@ -4,9 +4,9 @@ const bcrypt = require("bcryptjs");
 
 const Users = db.define("users", {
   id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
+    type: DataTypes.UUID,
+    defaultValue: DataTypes.UUIDV4,
+    primaryKey: true
   },
   identification: {
     type: DataTypes.STRING,

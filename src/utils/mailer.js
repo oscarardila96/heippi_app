@@ -1,6 +1,8 @@
 const nodemailer = require("nodemailer");
 require("dotenv").config();
 
+//Configuración de NodeMailer para el envio de correos.
+
 const transporter = nodemailer.createTransport({
   service: "hotmail",
   auth: {
@@ -8,15 +10,5 @@ const transporter = nodemailer.createTransport({
     pass: process.env.O_PASS
   }
 });
-
-// const transporter = nodemailer.createTransport({
-//   host: "smtp.gmail.com",
-//   port: "465",
-//   secure: true,
-//   auth: {
-//     user: process.env.G_EMAIL,
-//     pass: process.env.G_KEY
-//   }
-// });
 
 module.exports = transporter;

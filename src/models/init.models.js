@@ -7,6 +7,8 @@ const Observations = require("./observations.models");
 const HospitalDoctors = require("./hospital_doctors.models");
 const Users = require("./users.model");
 
+// Se crean las relaciones entre modelos de uno a muchos y de muchos a muchos utilizando tablas pivote y definiendo llaves foraneas
+
 const initModels = () => {
   Patients.belongsTo(Users, { as: "user", foreignKey: "user_id" });
   Users.hasMany(Patients, { as: "patient", foreignKey: "user_id" });
