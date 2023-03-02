@@ -5,6 +5,8 @@ const initModels = require("./models/init.models");
 const routerApi = require("./routes");
 const db = require("./utils/database");
 
+// GitHub: https://github.com/oscarardila96/heippi_app
+// Railway: https://heippi-app-oscar-production.up.railway.app
 
 //Se inicializa express, las rutas, los modelos y el middleware de error
 const app = express();
