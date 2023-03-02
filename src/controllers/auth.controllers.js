@@ -9,7 +9,7 @@ const generator = require("generate-password");
 const register = async (req, res, next) => {
   try {
     const newUser = req.body;
-    const { uname } = req.body;
+    const { name: uname } = req.body;
     const result = await AuthServices.register(newUser);
     if (result) {
       const { id, token, email } = result;
